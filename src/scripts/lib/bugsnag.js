@@ -23,9 +23,9 @@ function getBugsnagClient () {
     autoBreadcrumbs: false,
     autoCaptureSessions: false,
     collectUserIp: false,
-    beforeSend: async function (report) {
+    beforeSend: function (report) {
       const db = browser.extension.getBackgroundPage().db;
-      const sendErrorReports = await db.get('sendErrorReports', true);
+      const sendErrorReports = db.get('sendErrorReports', true);
       if (!sendErrorReports) {
         report.ignore();
         return false;
