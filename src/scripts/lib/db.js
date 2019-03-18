@@ -36,6 +36,10 @@ const CORE_SETTINGS = {
   sendUsageStatistics: true
 };
 
+const KEEP_LOCAL_MIRROR = {
+  sendErrorReports: true
+};
+
 const transformLegacyValue = (value) => {
   if (typeof value !== 'undefined') {
     // Ensure older version's settings still function if they get saved to sync storage.
@@ -155,6 +159,10 @@ export default class Db {
 
   get (key, defaultValue) {
     const hasDefaultValue = typeof defaultValue !== 'undefined';
+    if (KEEP_LOCAL_MIRROR[key]) {
+      const localVal = JSON.parse(localStorage.getItem(key));
+      return typeof localVal !== 'undefined' ? localVal : defaultValue;
+    }
     return browser.storage.sync.get(hasDefaultValue ? { [key]: defaultValue } : key)
       .then((result) => {
         if (process.env.DEBUG) {
@@ -184,6 +192,9 @@ export default class Db {
   }
 
   set (setting, value) {
+    if (KEEP_LOCAL_MIRROR[setting]) {
+      localStorage.setItem(setting, JSON.stringify(value));
+    }
     return browser.storage.sync
       .set({ [setting]: value })
       .catch((e) => {
@@ -197,6 +208,10 @@ export default class Db {
   }
 
   setMultiple (settings) {
+    Object.keys(settings)
+      .filter(key => KEEP_LOCAL_MIRROR[key])
+      .forEach(key => this.set(key, settings[key]));
+
     return browser.storage.sync
       .set(settings)
       .catch((e) => {
