@@ -647,7 +647,7 @@ document.addEventListener('DOMContentLoaded', async function (e) {
     const settingsActiveTab = await db.get('settings-active-tab');
     const activeTab = Number.parseInt(settingsActiveTab, 10);
     changeActiveTab(activeTab);
-    document.querySelector('body').style.display = 'block';
+    document.querySelector('body').style.display = 'flex';
 
     Settings.showPage();
 
