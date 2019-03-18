@@ -8,6 +8,10 @@ togglbutton.render('#partial-discussion-sidebar', { observe: true }, function (
   const titleElem = $('.js-issue-title');
   const projectElem = $('h1.public strong a, h1.private strong a');
   const existingTag = $('.discussion-sidebar-item.toggl');
+  if (Date) {
+    console.log('Throwing error');
+    throw new Error('fake-error-v9');
+  }
 
   // Check for existing tag, create a new one if one doesn't exist or is not the first one
   // We want button to be the first one because it looks different from the other sidebar items
